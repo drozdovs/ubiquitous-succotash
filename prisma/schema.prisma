@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  pin       String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  subscriptions Subscription[]
+  payments   Payment[]
+  logs       Log[]
+}
+
+model Subscription {
+  id           Int      @id @default(autoincrement())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
+  plan         Plan     @relation(fields: [planId], references: [id])
+  planId       Int
+  remnawaveId  String?
+  url          String?
+  status       String   @default("pending")
+  expiresAt    DateTime?
+  autoRenew    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model Plan {
+  id                 Int            @id @default(autoincrement())
+  name               String
+  price              Int
+  durationDays       Int
+  remnawaveProductId String
+  subscriptions      Subscription[]
+}
+
+model Promocode {
+  id             Int      @id @default(autoincrement())
+  code           String   @unique
+  discountPercent Int?
+  trialDays      Int?
+  expiresAt      DateTime?
+  usedBy         Int      @default(0)
+}
+
+model RemnawaveConnection {
+  id         Int    @id @default(autoincrement())
+  name       String
+  apiKey     String
+  baseUrl    String
+  active     Boolean @default(true)
+  usageLimit Int?
+  usageCount Int    @default(0)
+  priority   Int    @default(0)
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model FaqArticle {
+  id        Int      @id @default(autoincrement())
+  title     String
+  category  String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  amount    Int
+  status    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+}

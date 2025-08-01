@@ -1,0 +1,7 @@
+export default function PlansPage() {
+  return (
+    <main className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Plans</h1>
+    </main>
+  );
+}

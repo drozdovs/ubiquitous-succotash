@@ -1,1 +1,30 @@
-# ubiquitous-succotash
+# VPN Subscription App
+
+Этот репозиторий содержит минимальный скелет приложения для продажи VPN-подписок. Стек: Next.js (App Router), TailwindCSS, Prisma и MySQL. В инфраструктуре используется Docker.
+
+## Запуск в разработке
+
+1. Скопируйте `.env.example` в `.env` и задайте значения переменных окружения.
+2. Запустите контейнеры:
+
+```bash
+docker-compose up --build
+```
+
+Сервисы:
+- Next.js фронтенд на `http://localhost:3000`
+- MySQL на порту `3306`
+- Mailhog для отладки писем на `http://localhost:8025`
+
+## Миграции и сиды
+
+Prisma схему можно найти в `prisma/schema.prisma`. После установки зависимостей выполните:
+
+```bash
+npx prisma migrate deploy
+npx ts-node prisma/seed.ts
+```
+
+## Замечание
+
+Проект является заготовкой. Логика авторизации, оплаты и интеграции с Remnawave API должна быть реализована дополнительно.
